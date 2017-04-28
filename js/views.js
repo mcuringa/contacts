@@ -9,7 +9,7 @@ var Layout =
       m("main.grid", m("div.row",
         [
           m("div.col-md-4", m(ContactList)),
-          m("div.col-md-6", m(ContactForm))
+          m("div.col-md-6", vnode.children)
         ]
       )));
   }
@@ -22,21 +22,39 @@ var ContactList =
     return m("div", 
       [
         m("h4","Contact List"),
-        m("ul", contacts.findAll().map((c)=>{return m("li", c.getFullName())})),
+        m("ul", 
+          contacts.findAll().map(
+            (c)=>
+            {
+              var thisContact = c;
+              return m("li", m("a",
+              {
+                href: "#!/edit/" + c.id,
+                onclick: ()=>{
+                  ContactForm.contact = contacts.get(thisContact.id);
+                }
+              },
+              c.getFullName()));
+            }
+          )
+        ),
       ]);
   }
 }
 
 var ContactForm =
 {
-  contact: null,
+  contact: new Contact(),
   oninit: function(vnode) 
   {
-    ContactForm.contact = new Contact();
-    // Source.load(vnode.attrs.id)
+    if(vnode.attrs.id)
+      ContactForm.contact = contacts.get(vnode.attrs.id);
+    else
+      ContactForm.contact = new Contact();
   },
   view: function() 
   {
+    console.log("view called");
     return m("section#code-form", 
       m("form#the_code-form.active",
       {
@@ -45,7 +63,6 @@ var ContactForm =
             console.log("saving");
             e.preventDefault();
             contacts.save(ContactForm.contact);
-            // ContactList.list.push(ContactForm.contact);
         }
       },
       [
@@ -92,10 +109,15 @@ var ContactForm =
 };
 
 
-m.route(root,"/edit", {
-    "/edit": {
-        render: function() {
-            return m(Layout);
-        }
+m.route(root,"/new", {
+  "/new": {
+    render: function() {
+        return m(Layout, m(ContactForm));
     }
+  },
+  "/edit/:id": {
+    render: function(vnode) {
+        return m(Layout, m(ContactForm,vnode.attrs));
+    }
+  }
 });

@@ -18,6 +18,17 @@ var Contact = function()
 
 };
 
+var matt = new Contact();
+matt.firstName = "Matt";
+matt.lastName = "Curinga";
+
+var diego = new Contact();
+diego.firstName = "Diego";
+diego.lastName = "Curinga";
+
+console.log(matt.lastName);
+console.log(matt.getFullName());
+
 var contacts =
 {
   nextId: 1,
