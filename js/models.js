@@ -27,9 +27,9 @@ var contacts =
     if(contact.id == 0)
     {
       contact.id = contacts.nextId;
-      contacts.contacts++;
+      contacts.nextId++;
     }
-    contacts.data[contact.id+''] = contact;
+    contacts.data[String(contact.id)] = contact;
   },
   
   findAll: function()
@@ -42,8 +42,8 @@ var contacts =
     contacts.data[contact.email] = null;
   },
   
-  get: function(email)
+  get: function(id)
   {
-    return contacts.data[email];
+    return contacts.data[id];
   }
 };
