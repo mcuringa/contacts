@@ -54,17 +54,8 @@ var ContactForm =
   },
   view: function() 
   {
-    console.log("view called");
     return m("section#code-form", 
       m("form#the_code-form.active",
-      {
-          onsubmit: function(e) 
-          {
-            console.log("saving");
-            e.preventDefault();
-            contacts.save(ContactForm.contact);
-        }
-      },
       [
         m("h4", "Contact Form"),
         m("div.form-group",

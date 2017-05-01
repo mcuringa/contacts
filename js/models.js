@@ -8,6 +8,8 @@ var Contact = function()
   this.lastName = "";
   this.email = "";
   this.phone = "";
+  
+  //meta-data
   this.created = new Date();
   this.modified = new Date();
 
@@ -18,21 +20,12 @@ var Contact = function()
 
 };
 
-var matt = new Contact();
-matt.firstName = "Matt";
-matt.lastName = "Curinga";
-
-var diego = new Contact();
-diego.firstName = "Diego";
-diego.lastName = "Curinga";
-
-console.log(matt.lastName);
-console.log(matt.getFullName());
 
 var contacts =
 {
   nextId: 1,
-  data: {},
+  db: {}, //key: contact.id, value: contact
+  
   save: function(contact)
   {
     if(contact.id == 0)
@@ -40,21 +33,22 @@ var contacts =
       contact.id = contacts.nextId;
       contacts.nextId++;
     }
-    contacts.data[String(contact.id)] = contact;
+    
+    contacts.db[String(contact.id)] = contact;
   },
   
   findAll: function()
   {
-    return _.values(contacts.data);
+    return _.values(contacts.db);
   },
   
   delete: function(contact)
   {
-    contacts.data[contact.email] = null;
+    contacts.db[contact.email] = null;
   },
   
   get: function(id)
   {
-    return contacts.data[id];
+    return contacts.db[id];
   }
 };
