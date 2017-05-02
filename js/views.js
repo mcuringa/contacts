@@ -20,25 +20,25 @@ var ContactList =
   view: function()
   {
     return m("div", 
-      [
-        m("h4","Contact List"),
-        m("ul", 
-          contacts.findAll().map(
-            (c)=>
-            {
-              var thisContact = c;
-              return m("li", m("a",
-              {
-                href: "#!/edit/" + c.id,
-                onclick: ()=>{
-                  ContactForm.contact = contacts.get(thisContact.id);
-                }
-              },
-              c.getFullName()));
-            }
-          )
-        ),
-      ]);
+    [
+      m("h4","Contact List"),
+      m("div.list-group", 
+        contacts.findAll().map(
+          (c)=>
+          {
+            return m("a.list-group-item",
+            { 
+              href: "#!/edit/" + c.id,
+              onclick: ()=>{
+                ContactForm.contact = contacts.get(c.id);
+              }
+            },
+            c.getFullName()
+            );
+          }
+        )
+      ),
+    ]);
   }
 }
 

@@ -5,7 +5,7 @@ var Contact = function(data)
 {
   if(!data)
     data = {};
-  
+
   this.id = data.id || 0;
   this.firstName = data.firstName || "";
   this.lastName = data.lastName || "";
@@ -107,7 +107,7 @@ var contacts =
   
   delete: function(contact)
   {
-    contacts.db[contact.email] = null;
+    delete contacts.db[contact.id];
     contacts.store();
   },
   
