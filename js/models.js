@@ -1,29 +1,31 @@
 // models.js
 // var _ = require("./underscore-min.js");
 
-var Contact = function(data)
+var Contact = function(initialValues)
 {
-  if(!data)
-    data = {};
+  if(!initialValues)
+    initialValues = {};
 
-  this.id = data.id || 0;
-  this.firstName = data.firstName || "";
-  this.lastName = data.lastName || "";
-  this.email = data.email || "";
-  this.phone = data.phone || "";
-  this.langs = data.langs || {};
+  this.id = initialValues.id || 0;
+  this.firstName = initialValues.firstName || "";
+  this.lastName = initialValues.lastName || "";
+  this.email = initialValues.email || "";
+  this.phone = initialValues.phone || "";
+  this.langs = initialValues.langs || {};
 
   this.addresses = [];
-  if(data.addresses)
+  if(initialValues.addresses)
   {
-    this.addresses = data.addresses.map((a)=>{return new Address(a);});
+    this.addresses = initialValues.addresses.map((a)=>{return new Address(a);});
   }
   
   //meta-data
-  this.created = data.created || new Date();
-  this.modified = data.modified || new Date();
+  this.created = initialValues.created || new Date();
+  this.modified = initialValues.modified || new Date();
 
 };
+// var a = {firstName: "Matt", lastName: "Curinga"};
+// var matt = new Contact(a);
 
 Contact.prototype.getFullName = function()
 {
