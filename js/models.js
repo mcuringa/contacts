@@ -1,5 +1,5 @@
 // models.js
-var _ = require("./underscore-min.js");
+// var _ = require("./underscore-min.js");
 
 var Contact = function(data)
 {
@@ -11,10 +11,13 @@ var Contact = function(data)
   this.lastName = data.lastName || "";
   this.email = data.email || "";
   this.phone = data.phone || "";
+  this.langs = data.langs || {};
 
   this.addresses = [];
   if(data.addresses)
-    this.address = data.address.map(Address);
+  {
+    this.addresses = data.addresses.map((a)=>{return new Address(a);});
+  }
   
   //meta-data
   this.created = data.created || new Date();
@@ -22,22 +25,22 @@ var Contact = function(data)
 
 };
 
-Contact.prototpye.getFullName = function()
+Contact.prototype.getFullName = function()
 {
   return this.firstName + " " + this.lastName;
 };
 
-// Contact.parser = function(key, val)
-// {
-//   console.log(key);
-//   console.log(val);
-//   // if(key != "address")
-//   //   return val;
-  
-//   // return val.map(Address);
+Contact.languages = 
+{
 
-// }
-
+  en: "English",
+  es: "Spanish",
+  ch: "Chinese",
+  ru: "Russian",
+  ko: "Korean", 
+  ar: "Arabic",
+  fr: "French"
+}
 
 var Address = function(data)
 {
@@ -52,36 +55,37 @@ var Address = function(data)
   this.country = data.country || "";
 }
 
-a = new Address();
-a.country = "us";
-
-b = new Address({street1: "222 park pl apt 3a", city: "brooklyn", state: "ny", zip: "11238"});
-
-// console.log(JSON.stringify(a));
-// console.log(JSON.stringify(b));
-
-
-c = new Contact();
-c.firstName = "foo";
-c.lastName = "bar";
-
-c.addresses.push(a);
-c.addresses.push(b);
-
-// console.log("'" + c + "'");
-// str = JSON.stringify(c, null, '  ');
-// console.log(str);
-
-// obj = JSON.parse(str);
-// console.log(obj);
-
-
-
 
 var contacts =
 {
   nextId: 1,
   db: {}, //key: contact.id, value: contact
+
+  init:  _.once(function()
+  {
+
+    contacts.db = {};
+    contacts.nextId = 1;
+
+    if(!localStorage.contacts)
+      return;
+    var jsonData = JSON.parse(localStorage.contacts);
+    if(!jsonData)
+      return;
+    for(var i =0;i<jsonData.length;i++)
+    {
+      var c = new Contact(jsonData[i]);
+      contacts.db[c.id] = c;
+      if(c.id >= contacts.nextId)
+      {
+        contacts.nextId = c.id + 1;
+      }
+    }
+  }),  
+  store: function()
+  {
+    localStorage.contacts = JSON.stringify(contacts.findAll());
+  },
   
   save: function(contact)
   {
@@ -92,16 +96,19 @@ var contacts =
     }
     
     contacts.db[String(contact.id)] = contact;
+    contacts.store();
   },
   
   findAll: function()
   {
+    contacts.init();
     return _.values(contacts.db);
   },
   
   delete: function(contact)
   {
     contacts.db[contact.email] = null;
+    contacts.store();
   },
   
   get: function(id)
