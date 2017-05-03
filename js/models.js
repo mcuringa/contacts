@@ -74,6 +74,7 @@ var contacts =
     var jsonData = JSON.parse(localStorage.contacts);
     if(!jsonData)
       return;
+    
     for(var i =0;i<jsonData.length;i++)
     {
       var c = new Contact(jsonData[i]);

@@ -8,8 +8,7 @@ var ContactForm =
     if(vnode.attrs.id)
     {
       ContactForm.contact = contacts.get(vnode.attrs.id);
-      if(ContactForm.contact != null)
-        return;
+      return;
     }
     ContactForm.contact = new Contact();
     m.route.set("/new");
@@ -19,7 +18,7 @@ var ContactForm =
     var deleteCss = "";
     if(ContactForm.contact.id == 0) 
       deleteCss = "disabled";
-    return m("section#code-form", 
+    return m("section#contact-form", 
       m("form#the_code-form.active",
       [
         m("h4", "Contact Form",
@@ -41,8 +40,13 @@ var ContactForm =
           m("input.form-control", {
             placeholder: "first name", 
             value: ContactForm.contact.firstName,
-            oninput: m.withAttr("value", (v)=> { ContactForm.contact.firstName = v; })
+            oninput: m.withAttr("value", (v)=> 
+              { 
+                ContactForm.contact.firstName = v; 
+              })
           })),
+
+
         m("div.form-group",
           m("label","last name"),
           m("input.form-control", {
